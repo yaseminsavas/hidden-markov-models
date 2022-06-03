@@ -1,16 +1,22 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from src.utils import get_arguments
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+def main():
+    args = get_arguments()
+    mode = args[1]
+
+    if mode == '-obsv_prob':
+        print("Calculating probability")
+        #calculate_probability()
+    elif mode == '-viterbi':
+        print("Calculating Viterbi")
+        #viterbi()
+    elif mode == '-learn':
+        print("Training HMM")
+        #training()
+    else:
+        raise("Provide a valid argument! (-obsv_prob, -viterbi or -learn")
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
