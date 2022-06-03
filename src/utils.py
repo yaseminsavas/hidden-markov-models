@@ -9,6 +9,7 @@ def get_arguments():
 
 
 def initialize_parameters():
+
     p0 = np.array([0.95, 0.05])
 
     emission = np.array([[0.95, 0.05],
@@ -17,8 +18,8 @@ def initialize_parameters():
     transition = np.array([[0.95, 0.2],
                           [0.05, 0.8]])
 
-    states = {'0':'0','1':'1'}
-    observations = {'0':'0', '1':'1'}
+    states = ['0', '1']
+    observations = {'0': '0', '1': '1'}
 
     p0 = pd.DataFrame(p0, index=["0", "1"], columns=["probability"])
     emission = pd.DataFrame(emission, index=["0", "1"], columns=["0", "1"])

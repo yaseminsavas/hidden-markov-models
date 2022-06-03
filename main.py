@@ -22,14 +22,14 @@ def main():
 
     if mode == '-obsv_prob':
         print("Calculating probability")
-        #calculate_probability()
+        #forward()
     elif mode == '-viterbi':
         print("Calculating Viterbi")
         hmm_object = HMM(p0, emission, transition, states, observations)
         hmm_object.viterbi()
     elif mode == '-learn':
         print("Training HMM")
-        #training()
+        #learn()
     else:
         raise "Provide a valid argument! (-obsv_prob, -viterbi or -learn"
 

@@ -1,5 +1,3 @@
-
-
 class HMM:
     def __init__(self, p0, emission, transition, states, observations):
 
@@ -14,22 +12,29 @@ class HMM:
         # initially
         viterbi_result = [{}]
         for st in self.states:
-            viterbi_result[0][st] = {"probability": self.p0["probability"][st] * self.emission[st][self.observations['0']], "previous": None}
+            viterbi_result[0][st] = {"probability": self.p0["probability"][st] * self.emission[st][self.observations[st]], "previous": None}
+
+        print(viterbi_result)
 
         for observation in range(len(self.observations)):
             viterbi_result.append({})
-            for index,state in enumerate(self.states):
-                max_tr_prob = viterbi_result[index][state]["probability"] * self.transition[self.states["0"]][self.states[state]]
-                print(self.states)
-                prev_st_selected = self.states['0']
+
+            for index, state in enumerate(self.states):
+
+                max_tr_prob = viterbi_result[index][state]["probability"] * \
+                              self.transition[self.states[index]][self.states[index]]
+                prev_st_selected = self.states[index]
+
                 for prev_st in self.states[1:]:
-                    tr_prob = viterbi_result[index][state - 1][prev_st]["probability"] * self.transition[prev_st][self.states[state]]
+
+                    tr_prob = viterbi_result[index][prev_st]["probability"] * self.transition[prev_st][self.states[index]]
                     if tr_prob > max_tr_prob:
                         max_tr_prob = tr_prob
                         prev_st_selected = prev_st
 
-                max_prob = max_tr_prob * self.emission[st][self.observations[state]]
-                viterbi_result[state][st] = {"probability": max_prob, "previous": prev_st_selected}
+                max_prob = max_tr_prob * self.emission[state][self.observations[state]]
+                viterbi_result[index] = {"probability": max_prob, "previous": prev_st_selected}
+                print(viterbi_result)
 
                 opt = []
                 max_prob = 0.0
