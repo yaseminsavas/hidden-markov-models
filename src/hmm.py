@@ -1,54 +1,38 @@
+import numpy as np
+
 class HMM:
-    def __init__(self, p0, emission, transition, states, observations):
+    def __init__(self, Pi, A, B, states, state_dict, observations, observation_dict):
 
-        self.p0 = p0
-        self.transition = transition
-        self.emission = emission
+        self.Pi = Pi
+        self.A = A
+        self.B = B
         self.states = states
+        self.state_dict = state_dict
         self.observations = observations
+        self.observation_dict = observation_dict
 
-    def viterbi(self):
+# TODO: PARAPHRASE THIS CODE !!!
 
-        # initially
-        viterbi_result = [{}]
-        for st in self.states:
-            viterbi_result[0][st] = {"probability": self.p0["probability"][st] * self.emission[st][self.observations[st]], "previous": None}
+    def viterbi(self, y, A, B, Pi):
 
-        print(viterbi_result)
+        # y is the observation state sequence -> comes from the testdata.txt file.
+        # A is the transition matrix within states
+        # B is the emission matrix between observations & states
+        # Pi is the initial state probabilities
 
-        for observation in range(len(self.observations)):
-            viterbi_result.append({})
+        T1 = np.empty(shape=(A.shape[0], len(y)))
+        T2 = np.empty(shape=(A.shape[0], len(y)))
+        T1[:, 0] = Pi * B[:, y[0]]
+        T2[:, 0] = 0
 
-            for index, state in enumerate(self.states):
+        for i in range(1, len(y)):
+            T1[:, i] = np.max(T1[:, i - 1] * A.T * B[np.newaxis, :, y[i]].T, 1)
+            T2[:, i] = np.argmax(T1[:, i - 1] * A.T, 1)
 
-                max_tr_prob = viterbi_result[index][state]["probability"] * \
-                              self.transition[self.states[index]][self.states[index]]
-                prev_st_selected = self.states[index]
+        x = np.empty(len(y), 'B')
+        x[-1] = np.argmax(T1[:, len(y) - 1])
 
-                for prev_st in self.states[1:]:
+        for i in reversed(range(1, len(y))):
+            x[i - 1] = T2[x[i], i]
 
-                    tr_prob = viterbi_result[index][prev_st]["probability"] * self.transition[prev_st][self.states[index]]
-                    if tr_prob > max_tr_prob:
-                        max_tr_prob = tr_prob
-                        prev_st_selected = prev_st
-
-                max_prob = max_tr_prob * self.emission[state][self.observations[state]]
-                viterbi_result[index] = {"probability": max_prob, "previous": prev_st_selected}
-                print(viterbi_result)
-
-                opt = []
-                max_prob = 0.0
-                best_st = None
-
-                for st, data in viterbi_result[-1].items():
-                    if data["probability"] > max_prob:
-                        max_prob = data["probability"]
-                        best_st = st
-                opt.append(best_st)
-                previous = best_st
-
-                for t in range(len(viterbi_result) - 2, -1, -1):
-                    opt.insert(0, viterbi_result[t + 1][previous]["previous"])
-                    previous = viterbi_result[t + 1][previous]["previous"]
-
-                print("The steps of states are " + " ".join(opt) + " with highest probability of %s" % max_prob)
+        return x, T1, T2

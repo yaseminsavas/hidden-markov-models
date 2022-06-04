@@ -1,0 +1,41 @@
+Let A be transition matrix which is n by n,
+which means you have n states.
+a11 indicates transition from state 1 to state 1 and other terms are done in the same way.
+Let B be observation probability matrix which is n by k, where n is number of states and k is number of unique observations.
+bnk is probability of seeing k in state n. Let Pi be the initial probability distributions for states which is 1 by n.
+pn states the probability of being at state n at start.
+
+You can assume that observations are labeled as 1 to k whereas k is the number of unique observations.
+Also in the model for observation probabilities (B matrix) you may assume that label names can be matched corresponding matrix elements.
+For example, assume that you have observations {1,2,3...,k} in the data file and b23 in your model file corresponds to probability
+of seeing observation label 3 in state 2.
+Thus, this saves you from ambiguity of thinking whether probability of observations seen in data file corresponds to correct matrix elements in the model.
+
+Format is as follows: You will start reading a text document starting with letter A, and the last element you read will be pn. 
+----------------------
+A
+
+a11 a12 ..... a1n
+a21 a22 ..... a2n
+.
+.
+.
+.
+.
+.
+an1 an2 ..... ann
+
+B
+
+b11 b12 .... b1k
+b21 b22 .... b2k
+.
+.
+.
+.
+.
+bn1 bn2 .... bnk
+
+Pi
+
+p1 p2 p3 .... pn
