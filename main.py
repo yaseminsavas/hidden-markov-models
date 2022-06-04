@@ -37,23 +37,28 @@ def main():
                 arr_subseq.append(int(el))
         array_sequences.append(arr_subseq)
 
+    hmm_object = HMM(Pi, A, B, states, state_dict, observations, observation_dict)
+
     if mode == '-obsv_prob':
-        print("Calculating probability")
-        #forward()
+
+        print("Calculating probability of a given sequence")
+        print(" ")
+        hmm_object.forward(np.array(array_sequences[0]), A, B, Pi)
+
     elif mode == '-viterbi':
+
         print("Calculating the most possible state sequence using the Viterbi Algorithm...")
-        hmm_object = HMM(Pi, A,B, states, state_dict, observations, observation_dict)
         print("Observed sequence: ", np.array(array_sequences[0]))
-        likely_seq, likely_prob, x_prev_likely = hmm_object.viterbi(np.array(array_sequences[0]), A, B, Pi)
+
+        likely_seq, likely_prob = hmm_object.viterbi(np.array(array_sequences[0]), A, B, Pi)
+
         print("The most likely sequence: ")
         print(likely_seq)
         print(" ")
-        print("It's probability: ")
+        print("Its' probabilities: ")
         print(likely_prob)
         print(" ")
-        print("x_j-1 most likely path: ")
-        print(x_prev_likely)
-        print(" ")
+
     elif mode == '-learn':
         print("Training HMM")
         #learn()
