@@ -43,7 +43,8 @@ def main():
 
         print("Calculating probability of a given sequence")
         print(" ")
-        hmm_object.forward(np.array(array_sequences[0]), A, B, Pi)
+        probability = hmm_object.forward(np.array(array_sequences[0]), A, B, Pi)
+        print("Probability: ", probability)
 
     elif mode == '-viterbi':
 
