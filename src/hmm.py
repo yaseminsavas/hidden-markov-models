@@ -21,12 +21,14 @@ class HMM:
         store_forward[0, :] = c1
 
         cp = 0
-        for i in y[1:]:
-            ctemp = [sum(c1 * A[:, j]) for j in range(A.shape[0])]
-            c2 = ctemp * B[:, i]  # calculates the other columns recursively
-            c1 = c2
-            store_forward[np.where(y == i), :] = c1
-            cp = sum(c1)
+
+        for index, i in enumerate(y):
+            if index > 0:
+                ctemp = [sum(c1 * A[:, j]) for j in range(A.shape[0])]
+                c2 = ctemp * B[:, i]  # calculates the other columns recursively
+                c1 = c2
+                store_forward[np.where(y == i), :] = c1
+                cp = sum(c1)
 
         return cp
 
