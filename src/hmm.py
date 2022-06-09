@@ -16,7 +16,7 @@ class HMM:
 
         store_forward = np.zeros(shape=(y.shape[0], A.shape[0]))
 
-        # inital calculation
+        # initial calculation
         c1 = Pi.T * B[:, y[0]]
         store_forward[0, :] = c1
 
@@ -47,10 +47,14 @@ class HMM:
 
         T1[:, 0] = Pi * B[:, y[0]]
 
+        counter = 0
         for i in range(1, len(y)):
             T1[:, i] = np.max(T1[:, i - 1] * A.T * B[np.newaxis, :, y[i]].T, 1)
+            counter += 1
 
         x[-1] = np.argmax(T1[:, len(y) - 1])
+
+        print("Iteration number: ",counter)
 
         return x, T1
 
