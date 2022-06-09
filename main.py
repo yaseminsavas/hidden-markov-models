@@ -62,9 +62,9 @@ def main():
 
     elif mode == '-learn':
         print("Training HMM")
-        #learn()
+        hmm_object.BaumWelch()
     else:
-        raise "Provide a valid argument! (-obsv_prob, -viterbi or -learn"
+        raise "Provide a valid argument! ( -obsv_prob, -viterbi or -learn )"
 
 
 if __name__ == '__main__':

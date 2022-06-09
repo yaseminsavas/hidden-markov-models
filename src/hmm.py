@@ -54,8 +54,10 @@ class HMM:
 
         x[-1] = np.argmax(T1[:, len(y) - 1])
 
-        print("Iteration number: ",counter)
+        print("Iteration number: ", counter)
 
         return x, T1
 
     # PART III
+    def BaumWelch(self):
+        pass
