@@ -30,8 +30,6 @@ class HMM:
 
         return cp
 
-# TODO: PRINT THE NUMBER OF ITERATIONS NEEDED
-
     # PART II
     def viterbi(self, y, A, B, Pi):
 
