@@ -49,17 +49,19 @@ class HMM:
         probs[:, 0] = Pi * B[:, y[0]]
 
         counter = 0
-        for i in range(1, len(y)):
+        for i in range(0, len(seq)-1):
 
-            probs_1 = A * probs[:, i - 1]
-            probs_2 = B[np.newaxis, :, y[i]]
+            probs_1 = A * probs[:, i]
+            probs_2 = B[:, y[i+1]]
             probs_fin = probs_2 * probs_1
-            probs[:, i] = np.max(probs_fin, 1)
+            probs[:, i+1] = np.max(probs_fin, 1)
             seq[len(seq)-1] = np.where(np.max(probs[:, len(y) - 1]) > 0, 1, 0)
             counter += 1
 
         print("Iteration number: ", counter)
+
         return seq, probs
+
 
     # PART III
     # I didn't implemented the Baum-Welch part
