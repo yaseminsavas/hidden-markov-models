@@ -29,7 +29,8 @@ class HMM:
             else:
                 continue
 
-            forward_values[np.where(y == i)] = initial_values
+            pos = np.where(y == i)
+            forward_values[pos] = initial_values
 
         return np.sum(initial_values)
 
@@ -45,14 +46,13 @@ class HMM:
 
         probs = np.zeros(shape=(A.shape[0], len(y)))
         seq = np.zeros(shape=(len(y), 1))
-
-        probs[:, 0] = Pi * B[:, y[0]]
-
         counter = 0
+
         for i in range(0, len(seq)-1):
 
+            probs[:, 0] = Pi * B[:, y[0]]
             probs_1 = A * probs[:, i]
-            probs_2 = B[:, y[i+1]]
+            probs_2 = B[:, y[i]]
             probs_fin = probs_2 * probs_1
             probs[:, i+1] = np.max(probs_fin, axis=1)
             seq[len(seq)-1] = np.where(np.max(probs[:, len(y) - 1]) > 0, 1, 0)
