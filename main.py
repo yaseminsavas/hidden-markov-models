@@ -62,7 +62,7 @@ def main():
 
     elif mode == '-learn':
         print("Training HMM")
-        hmm_object.BaumWelch()
+        hmm_object.BaumWelch(observations, Pi, A, B, 0.001)
     else:
         raise "Provide a valid argument! ( -obsv_prob, -viterbi or -learn )"
 

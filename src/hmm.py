@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class HMM:
     def __init__(self, Pi, A, B, states, state_dict, observations, observation_dict):
 
@@ -12,25 +13,22 @@ class HMM:
         self.observation_dict = observation_dict
 
     # PART I
-    def forward(self,y, A, B, Pi):
+    def forward(self, y, A, B, Pi):
 
-        store_forward = np.zeros(shape=(y.shape[0], A.shape[0]))
+        # Multiplication of prior probabilities & emission matrix (initial forward values)
+        forward_values = np.zeros(shape=(y.shape[0], A.shape[0]))
+        forward_values[0, :] = B[:, y[0]] * Pi
 
-        # initial calculation
-        c1 = Pi.T * B[:, y[0]]
-        store_forward[0, :] = c1
-
-        cp = 0
-
+        # Going through y values to update the probabilities
+        initial_values = forward_values[0, :]
         for index, i in enumerate(y):
             if index > 0:
-                ctemp = [sum(c1 * A[:, j]) for j in range(A.shape[0])]
-                c2 = ctemp * B[:, i]  # calculates the other columns recursively
-                c1 = c2
-                store_forward[np.where(y == i), :] = c1
-                cp = sum(c1)
+                initial_values = [np.sum(initial_values * A[:, j]) for j in range(0, A.shape[0])] * B[:, i]
+                forward_values[np.where(y == i)] = initial_values
+            else:
+                continue
 
-        return cp
+        return np.sum(initial_values)
 
     # PART II
     def viterbi(self, y, A, B, Pi):
@@ -42,22 +40,25 @@ class HMM:
         Pi is the initial state probabilities
         '''
 
-        T1 = np.zeros(shape=(A.shape[0], len(y)))
-        x = np.zeros(len(y), 'B')
+        probs = np.zeros(shape=(A.shape[0], len(y)))
+        seq = np.zeros(shape=(len(y), 1))
 
-        T1[:, 0] = Pi * B[:, y[0]]
+        probs[:, 0] = Pi * B[:, y[0]]
 
         counter = 0
         for i in range(1, len(y)):
-            T1[:, i] = np.max(T1[:, i - 1] * A.T * B[np.newaxis, :, y[i]].T, 1)
-            counter += 1
 
-        x[-1] = np.argmax(T1[:, len(y) - 1])
+            probs_1 = probs[:, i - 1] * A.T
+            probs_2 = B[np.newaxis, :, y[i]].T
+            probs_fin = probs_1 * probs_2
+            probs[:, i] = np.max(probs_fin, 1)
+            counter += 1
+            seq[len(seq)-1] = np.argmax(probs[:, len(y) - 1])
 
         print("Iteration number: ", counter)
-
-        return x, T1
+        return seq, probs
 
     # PART III
-    def BaumWelch(self):
+    # I didn't implemented the Baum-Welch part
+    def BaumWelch(self, observations, Pi, A, B, k):
         pass
