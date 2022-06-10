@@ -15,18 +15,21 @@ class HMM:
     # PART I
     def forward(self, y, A, B, Pi):
 
-        # Multiplication of prior probabilities & emission matrix (initial forward values)
         forward_values = np.zeros(shape=(y.shape[0], A.shape[0]))
-        forward_values[0, :] = B[:, y[0]] * Pi
+
+        # Multiplication of prior probabilities & emission matrix (initial forward values)
+        for i in range(forward_values.shape[1]):
+            forward_values[0, :] = B[i, y[0]] * Pi
 
         # Going through y values to update the probabilities
         initial_values = forward_values[0, :]
         for index, i in enumerate(y):
             if index > 0:
                 initial_values = [np.sum(initial_values * A[:, j]) for j in range(0, A.shape[0])] * B[:, i]
-                forward_values[np.where(y == i)] = initial_values
             else:
                 continue
+
+            forward_values[np.where(y == i)] = initial_values
 
         return np.sum(initial_values)
 
@@ -48,12 +51,12 @@ class HMM:
         counter = 0
         for i in range(1, len(y)):
 
-            probs_1 = probs[:, i - 1] * A.T
-            probs_2 = B[np.newaxis, :, y[i]].T
-            probs_fin = probs_1 * probs_2
+            probs_1 = A * probs[:, i - 1]
+            probs_2 = B[np.newaxis, :, y[i]]
+            probs_fin = probs_2 * probs_1
             probs[:, i] = np.max(probs_fin, 1)
+            seq[len(seq)-1] = np.where(np.max(probs[:, len(y) - 1]) > 0, 1, 0)
             counter += 1
-            seq[len(seq)-1] = np.argmax(probs[:, len(y) - 1])
 
         print("Iteration number: ", counter)
         return seq, probs
